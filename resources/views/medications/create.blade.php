@@ -1,13 +1,21 @@
-@extends('layouts.app')
+@extends('adminlte::page')
+
+@section('title', 'Dashboard')
+
+@section('content_header')
+    <h1>Upload Medication CSV</h1>
+@stop
 
 @section('content')
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <h1>Upload Medication CSV</h1>
-            @if (session('message'))
-                <div class="alert alert-success">{{ session('message') }}</div>
-            @endif
+    @if (session('message'))
+        <div class="alert alert-success">{{ session('message') }}</div>
+    @endif
+    <div class="card card-dark">
+        <div class="card-header">
+            <h3 class="card-title"></h3>
+        </div>
+
+        <div class="card-body">
             <form action="{{ route('medications.upload') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="form-group @error('file') has-error @enderror">
@@ -21,5 +29,4 @@
             </form>
         </div>
     </div>
-</div>
-@endsection
+@stop

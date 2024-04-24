@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Valueset;
 use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
 
 class HomeController extends Controller
 {
@@ -25,4 +27,10 @@ class HomeController extends Controller
     {
         return view('home');
     }
+
+    public function dashboard()
+    {
+        return view('dashboard');
+    }
+
 }
