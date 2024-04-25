@@ -211,6 +211,7 @@ class ValueSetController extends Controller
 
     public function ValueSetCompare(){
         $valueset_mediactions = [];
+        $common_keys = [];
         $valueset_ids = session('compare_valueset_ids');
         if(!$valueset_ids){
             return view('valueset.compare', compact('valueset_mediactions'));
