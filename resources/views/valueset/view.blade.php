@@ -1,21 +1,28 @@
 <!-- Button trigger modal -->
-
-<button type="button" class="btn btn-dark btn-sm" data-toggle="modal" data-target="#view{{ $row->id}}">
-    <i class="fa fa-eye"></i>
-</button>
-@php
-    $valueset_ids = session('compare_valueset_ids');
-    $show_add_to_compare = true;
-    if($valueset_ids){
-        if ((array_search ( $row->id, $valueset_ids)) !== false) {
-            $show_add_to_compare = false;
-        } else {
+<div class="row">
+    <div class="col-auto">
+        <button type="button" class="btn btn-dark btn-sm" data-toggle="modal" data-target="#view{{ $row->id}}">
+            <i class="fa fa-eye"></i>
+        </button>
+    </div>
+    <div class="col-auto">
+        @php
+            $valueset_ids = session('compare_valueset_ids');
             $show_add_to_compare = true;
-        }
-    }
-@endphp
-<a href="#" id="add_to_compare_btn_{{ $row->id}}" data-row-id="{{$row->id}}" data-add-tocompare-url="{{ route('valueset.add.compare')}}" class="btn btn-sm btn-success add_to_compare_btn" title="Add to compare" style="display:{{$show_add_to_compare ? 'block' : 'none'}}"><i class="fa fa-plus"></i> Add to compare</a>
-<a href="#" id="remove_compare_btn_{{ $row->id}}" data-row-id="{{$row->id}}" data-remove-compare-url="{{ route('valueset.remove.compare')}}" class="btn btn-sm btn-danger remove_compare_btn" title="Remove from compare" style="display:{{$show_add_to_compare ? 'none' : 'block'}}"><i class="fa fa-trash"></i> Remove from compare</a>
+            if($valueset_ids){
+                if ((array_search ( $row->id, $valueset_ids)) !== false) {
+                    $show_add_to_compare = false;
+                } else {
+                    $show_add_to_compare = true;
+                }
+            }
+        @endphp
+        <a href="#" id="add_to_compare_btn_{{ $row->id}}" data-row-id="{{$row->id}}" data-add-tocompare-url="{{ route('valueset.add.compare')}}" class="btn btn-sm btn-success add_to_compare_btn" title="Add to compare" style="display:{{$show_add_to_compare ? 'block' : 'none'}}"><i class="fa fa-plus"></i> Add to compare</a>
+        <a href="#" id="remove_compare_btn_{{ $row->id}}" data-row-id="{{$row->id}}" data-remove-compare-url="{{ route('valueset.remove.compare')}}" class="btn btn-sm btn-danger remove_compare_btn" title="Remove from compare" style="display:{{$show_add_to_compare ? 'none' : 'block'}}"><i class="fa fa-trash"></i> Remove from compare</a>
+    </div>
+</div>
+
+
 
 <!-- Modal -->
 <div class="modal fade" id="view{{ $row->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"

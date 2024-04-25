@@ -19,34 +19,57 @@
     </div>
 
     <div class="card-body">
-        <form method="POST" id="search-form" role="form">
+        <div class="row">
+            <div class="col">
+                {{--  <form method="POST" id="search-form" role="form">  --}}
 
-            <div class="form-group">
-                <label for="search">Search</label>
-                <x-adminlte-input class="form-control" id="search_keyword" name="search_keyword" placeholder="Enter Name" />
+                <div class="form-group">
+                    <label for="search">Search</label>
+                    <x-adminlte-input class="form-control" id="search_keyword" name="search_keyword" placeholder="Enter Name" />
+                </div>
 
+                {{--  <div class="form-group">
+                    <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="exampleCheckbox">
+                    <label class="form-check-label" for="exampleCheckbox">
+                        With common medications
+                    </label>
+                    </div>
+                </div>  --}}
+
+                <div class="row justify-content-end">
+                    <div class="col-auto">
+                        <button class="btn btn-danger" id="clear_filter_btn">Clear Filter</button>
+                    </div>
+                    <div class="col-auto">
+                        <button class="btn btn-dark" id="filter_btn">Filter</button>
+                    </div>
+                </div>
+
+                <!--<div class="card-footer">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>-->
+                {{--  </form>  --}}
             </div>
-
-            <!--<button type="submit" class="btn btn-primary">Filter</button>-->
-
-            <!--<div class="card-footer">
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </div>-->
-        </form>
-        <table class="table table-bordered yajra-datatable">
-            <thead>
-                <tr>
-                    {{-- <th>
-                        <input type="checkbox" id="selectAll" /></th>  --}}
-                    {{-- <th>ID</th>  --}}
-                    <th>Id</th>
-                    <th>Value Set Name</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
+        </div>
+        <div class="row">
+            <div class="col">
+                <table class="table table-bordered yajra-datatable">
+                    <thead>
+                        <tr>
+                            {{-- <th>
+                                <input type="checkbox" id="selectAll" /></th>  --}}
+                            {{-- <th>ID</th>  --}}
+                            <th>Id</th>
+                            <th>Value Set Name</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 @stop
@@ -90,7 +113,17 @@
             ]
         });
 
-        $('#search_keyword').keyup(function() {
+        /*$('#search_keyword').keyup(function() {
+            dataTable.draw();
+        });*/
+
+        $('#filter_btn').on('click', function(e){
+            e.preventDefault();
+            dataTable.draw();
+        });
+        $('#clear_filter_btn').on('click', function(e){
+            e.preventDefault();
+            $('#search_keyword').val('');
             dataTable.draw();
         });
 
