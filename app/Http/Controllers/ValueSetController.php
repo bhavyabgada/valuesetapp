@@ -105,10 +105,16 @@ class ValueSetController extends Controller
     {
         if ($request->ajax()) {
             $search_keyword = '';
+            $with_common_medication = 0;
+            //echo '<pre>'; print_r($request->all()); die;
             //$request_data = $request->all();
             if ($request->has('search_keyword')) {
                 $search_keyword = $request->search_keyword;
             }
+            if ($request->has('with_common_medication')) {
+                $with_common_medication = $request->with_common_medication;
+            }
+
             // avoid zero column as it's checkbox so we can't sort by it
             if ($request->has('order') && $request->order[0]['column'] != 0) {
                 $sort_column_number = $request->order[0]['column'];
@@ -119,7 +125,14 @@ class ValueSetController extends Controller
             $main_query = Valueset::query();
             $query = $main_query;
             if (!empty($search_keyword)) {
-                $query = $query->where('value_set_name', 'LIKE', '%' . $search_keyword . '%');
+                $query = $query->where('valuesets.value_set_name', 'LIKE', '%' . $search_keyword . '%');
+            }
+            if (intval($with_common_medication) === 1) {
+
+                $query = $query->join('valuesets as v2', function ($join) {
+                    $join->whereRaw('FIND_IN_SET(valuesets.medications, v2.medications) > 0')
+                        ->whereRaw('valuesets.id <> v2.id');
+                })->select('valuesets.*','v2.medications');
             }
             if (!empty($sort_column_key)) {
                 $query = $query->orderBy($sort_column_key, $sort_column_dir);
@@ -218,8 +231,7 @@ class ValueSetController extends Controller
         //echo '<pre>'; print_r($medications->toArray()); die;
         if($medications->isNotEmpty()){
             foreach($medications as $medication){
-                $valueset_mediactions[$medication->value_set_name.' - '.($medication->value_set_id)][] = [
-                    $medication->medication_id =>
+                $valueset_mediactions[$medication->value_set_name.' - '.($medication->value_set_id)][$medication->medication_id] = [
                     [
                         'label' =>'Medication Name',
                         'value' => $medication->medname
@@ -247,9 +259,9 @@ class ValueSetController extends Controller
                 ];
             }
             //echo '<pre>'; print_r($valueset_mediactions); die;
-
+            $common_keys = $this->find_common_subarray_keys($valueset_mediactions);
         }
-        return view('valueset.compare', compact('valueset_mediactions'));
+        return view('valueset.compare', compact('valueset_mediactions', 'common_keys'));
     }
 
 
@@ -259,6 +271,9 @@ class ValueSetController extends Controller
             $valueset_id = $request->valueset_id;
             if (session()->has('compare_valueset_ids')) {
                 $valueset_ids = session('compare_valueset_ids');
+                if(count($valueset_ids) == 3){
+                    return response()->json(['status' => 'error', 'message' => 'You can select max. 3 valuesets to compare. Remove one of the selected if you want to add another valueset.']);
+                }
                 $valueset_ids[] = $valueset_id;
                 session()->put('compare_valueset_ids', $valueset_ids);
             } else {
@@ -284,5 +299,22 @@ class ValueSetController extends Controller
         } else {
             return response()->json(['status' => 'error', 'message' => 'Missing valueset'], 404);
         }
+    }
+
+    function find_common_subarray_keys($array) {
+        $commonKeys = [];
+
+    // Get the keys of the first sub-array
+    $keys = array_keys($array[array_key_first($array)]);
+
+    // Iterate over the rest of the sub-arrays
+    foreach ($array as $subArray) {
+        // Get the keys of the current sub-array
+        $subKeys = array_keys($subArray);
+        // Find the intersection of keys
+        $commonKeys = empty($commonKeys) ? $subKeys : array_intersect($commonKeys, $subKeys);
+    }
+
+    return $subKeys;
     }
 }

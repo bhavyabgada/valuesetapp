@@ -28,14 +28,14 @@
                     <x-adminlte-input class="form-control" id="search_keyword" name="search_keyword" placeholder="Enter Name" />
                 </div>
 
-                {{--  <div class="form-group">
+                <div class="form-group">
                     <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="exampleCheckbox">
-                    <label class="form-check-label" for="exampleCheckbox">
+                    <input class="form-check-input" type="checkbox" id="with_common_medication" name="with_common_medication">
+                    <label class="form-check-label" for="with_common_medication">
                         With common medications
                     </label>
                     </div>
-                </div>  --}}
+                </div>
 
                 <div class="row justify-content-end">
                     <div class="col-auto">
@@ -88,11 +88,16 @@
                 'data': function(data) {
                     // Read values
                     var search_keyword = $('#search_keyword').val();
-
+                    var with_common_medication = 0;
+                    if($('#with_common_medication').prop('checked')){
+                        with_common_medication = 1;
+                    } else {
+                        with_common_medication = 0;
+                    }
 
                     // Append to data
                     data.search_keyword = search_keyword;
-
+                    data.with_common_medication = with_common_medication;
                 }
             },
             columns: [
@@ -124,6 +129,7 @@
         $('#clear_filter_btn').on('click', function(e){
             e.preventDefault();
             $('#search_keyword').val('');
+            $('#with_common_medication').prop('checked', false);
             dataTable.draw();
         });
 
