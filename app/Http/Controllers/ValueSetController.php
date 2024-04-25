@@ -304,18 +304,17 @@ class ValueSetController extends Controller
 
     function find_common_subarray_keys($array) {
         $commonKeys = [];
+        $first = true;
 
-    // Get the keys of the first sub-array
-    $keys = array_keys($array[array_key_first($array)]);
+        foreach ($array as $subArray) {
+            if ($first) {
+                $commonKeys = array_keys($subArray);
+                $first = false;
+            } else {
+                $commonKeys = array_intersect($commonKeys, array_keys($subArray));
+            }
+        }
 
-    // Iterate over the rest of the sub-arrays
-    foreach ($array as $subArray) {
-        // Get the keys of the current sub-array
-        $subKeys = array_keys($subArray);
-        // Find the intersection of keys
-        $commonKeys = empty($commonKeys) ? $subKeys : array_intersect($commonKeys, $subKeys);
-    }
-
-    return $subKeys;
+        return $commonKeys;
     }
 }

@@ -32,11 +32,11 @@
                     <tr>
                         @foreach ($valueset_mediactions as $key=>$valueset_mediaction_column)
                             <td>
-                                @foreach ($valueset_mediaction_column as $valueset_mediaction)
-                                    <ul>
-                                        @foreach ($valueset_mediaction as $medication_key=>$mediaction)
-                                        <li class="{{(in_array($medication_key, $common_keys)) ? 'common-medication alert alert-success' : 'different-medication'}}">
-                                            <strong>{{$mediaction['label']}} {{$medication_key}}:</strong> {{$mediaction['value']}}
+                                @foreach ($valueset_mediaction_column as $medication_key=>$valueset_mediaction)
+                                    <ul class="{{(in_array($medication_key, $common_keys)) ? 'common-medication alert alert-success' : 'different-medication'}}">
+                                        @foreach ($valueset_mediaction as $mediaction)
+                                        <li>
+                                            <strong>{{$mediaction['label']}}:</strong> {{$mediaction['value']}}
                                         </li>
                                         @endforeach
                                     </ul>
